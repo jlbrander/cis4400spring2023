@@ -1,0 +1,39 @@
+import pandas as pd
+from google.cloud import storage
+
+# Lottery Retailers CSV
+lottery_retailers_csv = ['https://data.ny.gov/api/views/2vvn-pdyi/rows.csv?accessType=DOWNLOAD&sorting=true',
+                         '\lottery_retailers']
+
+# Index Crimes by County CSV
+crimes_csv = ['https://data.ny.gov/api/views/ca8h-8gjq/rows.csv?accessType=DOWNLOAD&sorting=true', '\crimes']
+
+# Municipalities and Counties CSV
+counties_csv = ['https://data.ny.gov/api/views/79vr-2kdi/rows.csv?accessType=DOWNLOAD&sorting=true', '\counties']
+
+list_of_csvs = [lottery_retailers_csv, crimes_csv, counties_csv]
+list_of_file_names = []
+
+for csv in list_of_csvs:
+    df = pd.read_csv(csv[0])
+    my_path = (r'C:\Users\brand\AppData\Roaming\JetBrains\PyCharmCE2022.2\scratches' + csv[1] + '.csv')
+    print(my_path)
+    my_string = (csv[1] + '.csv')
+    list_of_file_names.append(my_string[1:])
+    df.to_csv(my_path, index=False)
+
+## Part 2
+
+client = storage.Client.from_service_account_json(json_credentials_path='eternal-dynamo-385016-0d75dccba94e.json')
+bucket = storage.Bucket(client, 'cis_4400_hw')
+
+
+def upload_to_bucket(file_name):
+    blob = bucket.blob(file_name)
+    blob.upload_from_filename(file_name)
+    return "DONE"
+
+
+for file in list_of_file_names:
+    upload_to_bucket(file)
+    print(file, 'has been uploaded to Google Cloud Storage')
