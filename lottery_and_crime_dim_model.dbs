@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="cis_4400_hw" id="Project-f21" database="Snowflake" >
+	<schema name="PUBLIC" catalogname="CIS_4400_HW" >
+		<table name="AGENCY_DIM" prior="AGENCY_" >
+			<column name="ID_AGENCY" type="integer" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTOINCREMENT ]]></identity>
+			</column>
+			<column name="AGENCY_NAME" type="varchar" length="100" jt="12" />
+			<index name="PK_AGENCY_DIM_ID_AGENCY" unique="PRIMARY_KEY" >
+				<column name="ID_AGENCY" />
+			</index>
+		</table>
+		<table name="DATE_DIM" prior="TABLE" >
+			<column name="ID_DATE" type="integer" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTOINCREMENT ]]></identity>
+			</column>
+			<column name="YEAR" type="integer" jt="4" />
+			<index name="PK_DATE_DIM_ID_DATE" unique="PRIMARY_KEY" >
+				<column name="ID_DATE" />
+			</index>
+		</table>
+		<table name="FACT_CRIME" prior="CRIME_DIM" >
+			<column name="ID_FACT" prior="ID_CRIME" type="integer" jt="4" mandatory="y" />
+			<column name="MONTHS_REPORTED" type="integer" jt="4" />
+			<column name="INDEX_TOTAL" type="integer" jt="4" />
+			<column name="VIOLENT_TOTAL" type="integer" jt="4" />
+			<column name="MURDER" type="integer" jt="4" />
+			<column name="RAPE" type="integer" jt="4" />
+			<column name="ROBBERY" type="integer" jt="4" />
+			<column name="AGGRAVATED_ASSAULT" type="integer" jt="4" />
+			<column name="PROPERTY_TOTAL" type="integer" jt="4" />
+			<column name="BURGLARY" type="integer" jt="4" />
+			<column name="LARCENY" type="integer" jt="4" />
+			<column name="MOTOR_VEHICLE_THEFT" type="integer" jt="4" />
+			<column name="DATE_ID" type="integer" jt="4" />
+			<column name="LOCATION_ID" type="integer" jt="4" />
+			<column name="RETAILER_ID" type="integer" jt="4" />
+			<column name="AGENCY_ID" type="integer" jt="4" />
+			<index name="PK_CRIME_DIM_ID_CRIME" unique="PRIMARY_KEY" >
+				<column name="ID_FACT" />
+			</index>
+			<fk name="FK_FACT_CRIME_AGENCY_DIM" to_schema="CIS_4400_HW.PUBLIC" to_table="AGENCY_DIM" >
+				<fk_column name="AGENCY_ID" pk="ID_AGENCY" />
+			</fk>
+			<fk name="FK_FACT_CRIME_DATE_DIM" to_schema="CIS_4400_HW.PUBLIC" to_table="DATE_DIM" >
+				<fk_column name="DATE_ID" pk="ID_DATE" />
+			</fk>
+			<fk name="FK_FACT_CRIME_LOCATIONS_DIM" to_schema="CIS_4400_HW.PUBLIC" to_table="LOCATIONS_DIM" >
+				<fk_column name="LOCATION_ID" pk="ID_LOCATIONS" />
+			</fk>
+			<fk name="FK_FACT_CRIME_LOTTERY_RETAILERS_DIM" to_schema="CIS_4400_HW.PUBLIC" to_table="LOTTERY_RETAILERS_DIM" >
+				<fk_column name="RETAILER_ID" pk="ID_RETAILER" />
+			</fk>
+		</table>
+		<table name="LOCATIONS_DIM" prior="TABLE" >
+			<column name="ID_LOCATIONS" type="integer" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTOINCREMENT ]]></identity>
+			</column>
+			<column name="STREET" type="varchar" length="45" jt="12" />
+			<column name="CITY" type="varchar" length="45" jt="12" />
+			<column name="STATE" type="varchar" length="45" jt="12" />
+			<column name="ZIP" type="varchar" length="45" jt="12" />
+			<column name="LATITUDE" type="double" jt="8" />
+			<column name="LONGITUDE" type="double" jt="8" />
+			<column name="GEOREFERENCE" type="geography" jt="12" />
+			<column name="TOWN" type="varchar" length="45" jt="12" />
+			<column name="VILLAGE" type="varchar" length="45" jt="12" />
+			<column name="MUNICIPALITY" type="varchar" length="45" jt="12" />
+			<column name="COUNTY_NAME" type="varchar" length="100" jt="12" />
+			<column name="COUNTY_FIPS" type="varchar" length="45" jt="12" />
+			<column name="REGION" type="varchar" length="45" jt="12" />
+			<index name="PK_LOCATIONS_DIM_ID_LOCATIONS" unique="PRIMARY_KEY" >
+				<column name="ID_LOCATIONS" />
+			</index>
+		</table>
+		<table name="LOTTERY_RETAILERS_DIM" prior="FACT_LOTTERY_RETAILERS" >
+			<column name="ID_RETAILER" prior="ID_RETAILERS" type="integer" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTOINCREMENT ]]></identity>
+			</column>
+			<column name="RETAILER" type="varchar" length="45" jt="12" />
+			<column name="RETAILER_NAME" type="varchar" length="100" jt="12" />
+			<column name="QUICK_DRAW" type="boolean" jt="16" />
+			<index name="PK_FACT_LOTTERY_RETAILERS_IDFACT" unique="PRIMARY_KEY" >
+				<column name="ID_RETAILER" />
+			</index>
+		</table>
+	</schema>
+	<connector name="MyDb" database="MySql" host="localhost" port="3306" user="root" useSystemProxy="false" />
+	<layout name="Default Layout" id="Layout-19f1" show_relation="columns" >
+		<entity schema="CIS_4400_HW.PUBLIC" name="AGENCY_DIM" color="C1D8EE" x="736" y="144" />
+		<entity schema="CIS_4400_HW.PUBLIC" name="DATE_DIM" color="C1D8EE" x="768" y="464" />
+		<entity schema="CIS_4400_HW.PUBLIC" name="FACT_CRIME" color="C1D8EE" x="368" y="160" />
+		<entity schema="CIS_4400_HW.PUBLIC" name="LOCATIONS_DIM" color="C1D8EE" x="64" y="48" />
+		<entity schema="CIS_4400_HW.PUBLIC" name="LOTTERY_RETAILERS_DIM" color="C1D8EE" x="48" y="480" />
+	</layout>
+</project>
